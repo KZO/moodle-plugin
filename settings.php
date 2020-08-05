@@ -28,8 +28,15 @@ if ($ADMIN->fulltree) {
     require_once("$CFG->dirroot/mod/instilledvideo/lib.php");
 
     // General settings.
+    $settings->add(new admin_setting_configtext('instilledvideo/username', get_string('username', 'instilledvideo'),
+        get_string('username_help', 'instilledvideo'), '', PARAM_TEXT, 50));
+
     $settings->add(new admin_setting_configtext('instilledvideo/apikey', get_string('apikey', 'instilledvideo'),
-        get_string('apikey_help', 'instilledvideo'), '', PARAM_TEXT));
+        get_string('apikey_help', 'instilledvideo'), '', PARAM_TEXT, 50));
 
+    $settings->add(new admin_setting_configtext('instilledvideo/tenanturl', get_string('tenanturl', 'instilledvideo'),
+        get_string('tenanturl_help', 'instilledvideo'), '', PARAM_TEXT, 50));
 
+    $settings->add(new admin_setting_configtext('instilledvideo/parentcontainer', get_string('parentcontainer', 'instilledvideo'),
+        get_string('parentcontainer_help', 'instilledvideo'), '', PARAM_TEXT, 50));
 }
