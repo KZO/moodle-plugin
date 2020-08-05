@@ -66,6 +66,6 @@ echo $output->header();
 $heading = $moduleinstance->name;
 echo $output->heading($heading);
 
-echo $output->display_model($moduleinstance);
+echo $output->display_video($moduleinstance);
 
 echo $output->footer();

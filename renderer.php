@@ -30,24 +30,23 @@ class mod_instilledvideo_renderer extends plugin_renderer_base {
    * @param object $instilledvideo The instilledvideo activity with which the model is associated
    * @param boolean $editing true if the current user can edit the model, else false.
    */
-  public function display_model($instilledvideo, $editing = false) {
+  public function display_video($instilledvideo, $editing = false) {
     global $DB;
-    
-    $output = '';
-    
-    $model = $DB->get_record('instilledvideo', array('id' => $instilledvideo->id));
 
-    if(!$model) {
+    $id = optional_param('id', 0, PARAM_INT);
+
+    $output = '';
+
+    if(!$instilledvideo) {
         $output .= $this->output->heading(get_string("errornovideo", "instilledvideo"));
     } else {
-        $output .= '<div style="width: 100%; height: 500px; position: relative;">';
-        $output .= '<iframe src="https://front-103.kzoinnovations.com/featured" style="position: absolute; width: 100%; height: 100%; border: none" />';
-        $output .= '</div>';
-    }
 
-    echo '<pre>';
-    print_r($model);
-    echo '</pre>';
+      $context = context_module::instance($id);
+ 
+      $output .= '<div style="width: 100%; height: 500px; position: relative;">';
+      $output .= '<iframe allowfullscreen width="640" height="400" allow="microphone; camera" frameborder="0" src="https://localhost:8001/player/medium/1745376237682955692?embed=true&display=vid&overlay=false" style="position: absolute; width: 100%; height: 100%; border: none" />';
+      $output .= '</div>';
+    }
 
     return $output;
   }
