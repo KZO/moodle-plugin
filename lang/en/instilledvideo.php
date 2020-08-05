@@ -27,8 +27,15 @@ $string['modulenameplural'] = 'Instilled Videos';
 $string['pluginname'] = 'Instilled Video';
 $string['pluginadministration'] = 'Instilled Video Administration';
 
+$string['username'] = 'Username';
+$string['username_help'] = 'The Instilled username used to obtain an API Key.';
 $string['apikey'] = 'API Key';
 $string['apikey_help'] = 'An API key must be obtained from support@instilled.com to use this activity module.';
+$string['tenanturl'] = 'Tenant URL';
+$string['tenanturl_help'] = 'The URl for your Instilled instance.';
+$string['parentcontainer'] = 'Parent Container';
+$string['parentcontainer_help'] = 'The parent container ID of where videos will be stored on Instilled.';
+
 $string['modulename_help'] = 'The Instilled Video activity module enables the teacher to upload a video that can be shown to students.';
 $string['videotitle'] = 'Title';
 $string['videofile'] = 'Video File';
