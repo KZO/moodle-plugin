@@ -60,6 +60,8 @@ function instilledvideo_add_instance($moduleinstance, $mform = null) {
 
   $id = $DB->insert_record('instilledvideo', $moduleinstance);
 
+  $moduleinstance->instance = $id;
+
   $context = context_module::instance($cmid);
   if ($draftitemid) {
     file_save_draft_area_files($draftitemid, $context->id, 'mod_instilledvideo', 'content', 0, array('subdirs' => 0, 'maxbytes' => $COURSE->maxbytes, 'maxfiles' => 1, 'accepted_types' => array('video')));
