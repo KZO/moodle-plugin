@@ -26,12 +26,12 @@ namespace mod_instilledvideo\task;
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once ($CFG->dirroot . '/mod/instilledvideo/locallib.php');
+
 /**
  * Adhoc task that sends a video to instilled for processing.
  */
 class send_video_to_instilled extends \core\task\adhoc_task {
-
-  public $id = null;
 
   public function execute() {
     mtrace('My task started');
@@ -49,7 +49,8 @@ class send_video_to_instilled extends \core\task\adhoc_task {
     $this->upload_video($action->href, $data->coursemodule);
     mtrace('UPLOADING VIDEO COMPLETE');
 
-    $result = $this->process_video($medium->media->id);
+    $this->process_video($medium->media->id);
+    $this->update_course_table($data->instance, $medium->media->id);
     mtrace('My task ended');
   }
 
@@ -60,7 +61,7 @@ class send_video_to_instilled extends \core\task\adhoc_task {
     $url = $tenant_url . '/api/containers/'. $parent_container .'/medium';
     $post_data = json_encode(array('media'=>array('title' => $data->name, 'content_type' => 'VIDEO')), JSON_FORCE_OBJECT);
 
-    $medium = $this->call_api($method, $url, $post_data);
+    $medium = \mod_instilledvideo\instilledvideo::call_api($method, $url, $post_data);
     $medium = json_decode($medium);
     return $medium;
   }
@@ -69,12 +70,12 @@ class send_video_to_instilled extends \core\task\adhoc_task {
     $method = 'POST';
     $post_data = json_encode(array('original_videos'=>array('includes' => 'parent,medium,container.medium,containers')), JSON_FORCE_OBJECT);
 
-    $original_video = $this->call_api($method, $url, $post_data);
+    $original_video = \mod_instilledvideo\instilledvideo::call_api($method, $url, $post_data);
     $original_video = json_decode($original_video);
     return $original_video;
   }
 
-  public function upload_video($url, $course_id) {
+  protected function upload_video($url, $course_id) {
     global $CFG;
 
     $context = \context_module::instance($course_id);
@@ -105,7 +106,7 @@ class send_video_to_instilled extends \core\task\adhoc_task {
       curl_setopt($curl, CURLOPT_INFILE, $file_handler);
       curl_setopt($curl, CURLOPT_INFILESIZE, $file_size);
       curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-        'Content-Type: video/avi',
+        'Content-Type: ' . $mime_type,
         'Content-Length: ' . $file_size,
         'Connection: keep-alive'
       ));
@@ -130,48 +131,14 @@ class send_video_to_instilled extends \core\task\adhoc_task {
     $tenant_url = get_config('instilledvideo', 'tenanturl');
     $url = $tenant_url . '/api/media/' . $medium_id .'/process_video_rendition';
 
-    $response = $this->call_api($method, $url);
+    $response = \mod_instilledvideo\instilledvideo::call_api($method, $url);
     $response = json_decode($response);
     return $response;
   }
 
-  public function call_api($method, $url, $data = false) {
-    $curl = curl_init();
-    $username = get_config('instilledvideo', 'username');
-    $api_key = get_config('instilledvideo', 'apikey');
-
-    switch ($method)
-    {
-      case 'POST':
-        curl_setopt($curl, CURLOPT_POST, 1);
-
-        if ($data)
-          curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        break;
-      case 'PUT':
-        curl_setopt($curl, CURLOPT_PUT, 1);
-        break;
-      default:
-        if ($data)
-          $url = sprintf("%s?%s", $url, http_build_query($data));
-    }
-
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-      'X-KZO-Auth-AccessKey: ' . $api_key,
-      'X-KZO-Auth-Username: ' . $username,
-      'X-KZO-Accept-API-Versions: 1',
-      'Content-Type: application/vnd.api+json',
-      'X-KZO-Pipeline-Action: Process'
-    ));
-
-    $response = curl_exec($curl);
-
-    curl_close($curl);
-
-    return $response;
+  protected function update_course_table($instance_id, $medium_id) {
+    global $DB;
+    $DB->set_field('instilledvideo', 'mediumid', $medium_id, array('id' => $instance_id));
   }
 
   protected function get_action($arr, $key) {
