@@ -48,7 +48,7 @@ class mod_instilledvideo_renderer extends plugin_renderer_base {
       $output .= $this->output->heading(get_string("errornovideo", "instilledvideo"));
     } else { 
       $output .= '<div style="width: 100%; height: 500px; position: relative;">';
-      $output .= '<iframe allowfullscreen width="640" height="400" allow="microphone; camera" frameborder="0" src="'. $tenant_url .'/player/medium/'. $instilledvideo->mediumid .'?embed=true&display=vid&overlay=false&username=' . $USER->username .'&accessKey='. $USER->instilledaccesskey .'" style="position: absolute; width: 100%; height: 100%; border: none" />';
+      $output .= '<iframe allowfullscreen width="640" height="400" allow="microphone; camera" frameborder="0" src="'. $tenant_url .'/player/medium/'. $instilledvideo->mediumid .'?embed=true&display=vid&overlay=false&username=' . $USER->username .'&accessKey='. $USER->instilledaccesskey .'" style="position: absolute; width: 100%; height: 100%; border: none"></iframe>';
       $output .= '</div>';
     }
 
