@@ -33,6 +33,8 @@ function instilledvideo_supports($feature) {
   switch ($feature) {
     case FEATURE_MOD_INTRO:
       return true;
+    case FEATURE_GRADE_HAS_GRADE:
+      return true;
     default:
       return null;
   }
@@ -61,6 +63,7 @@ function instilledvideo_add_instance($moduleinstance, $mform = null) {
   $id = $DB->insert_record('instilledvideo', $moduleinstance);
 
   $moduleinstance->instance = $id;
+  $moduleinstance->id = $id;
 
   $context = context_module::instance($cmid);
   if ($draftitemid) {
@@ -72,6 +75,8 @@ function instilledvideo_add_instance($moduleinstance, $mform = null) {
   $task->set_next_run_time(time());
   $task->set_custom_data($moduleinstance);
   \core\task\manager::reschedule_or_queue_adhoc_task($task);
+
+  instilledvideo_grade_item_update($moduleinstance);
 
   return $id;
 }
@@ -91,6 +96,8 @@ function instilledvideo_update_instance($moduleinstance, $mform = null) {
 
   $moduleinstance->timemodified = time();
   $moduleinstance->id = $moduleinstance->instance;
+
+  instilledvideo_grade_item_update($moduleinstance);
 
   return $DB->update_record('instilledvideo', $moduleinstance);
 }
@@ -176,4 +183,60 @@ function instilledvideo_pluginfile($course, $cm, $context, $filearea, $args, $fo
 
   require_login($course, true, $cm);
   send_file_not_found();
+}
+
+/**
+ * Update/create grade item for given Instilled Video
+ *
+ * @category grade
+ * @param object $instilledvideo object with extra cmidnumber
+ * @param mixed $grades optional array/object of grade(s); 'reset' means reset grades in gradebook
+ * @return object grade_item
+ */
+function instilledvideo_grade_item_update($instilledvideo, $grades=null) {
+  global $CFG, $DB;
+  require_once($CFG->dirroot.'/mod/instilledvideo/locallib.php');
+  if (!function_exists('grade_update')) { // Workaround for buggy PHP versions.
+    require_once($CFG->libdir.'/gradelib.php');
+  }
+
+  $params = array('itemname' => $instilledvideo->name);
+  if (isset($instilledvideo->cmidnumber)) {
+    $params['idnumber'] = $instilledvideo->cmidnumber;
+  }
+
+  $params['gradetype'] = GRADE_TYPE_VALUE;
+  $params['grademax']  = 100;
+  $params['grademin']  = 0;
+
+  if ($grades === 'reset') {
+    $params['reset'] = true;
+    $grades = null;
+  }
+
+  return grade_update('mod/instilledvideo', $instilledvideo->course, 'mod', 'instilledvideo', $instilledvideo->id, 0, $grades, $params);
+}
+
+/**
+ * Update grades in central gradebook
+ *
+ * @category grade
+ * @param object $instilledvideo
+ * @param int $userid specific user only, 0 mean all
+ * @param bool $nullifnone
+ */
+function instilledvideo_update_grades($instilledvideo, $userid=0, $nullifnone=true) {
+  global $CFG;
+  require_once($CFG->libdir.'/gradelib.php');
+
+  if ($grades = instilledvideo_get_user_grades($instilledvideo, $userid)) {
+    instilledvideo_grade_item_update($instilledvideo, $grades);
+  } else if ($userid and $nullifnone) {
+    $grade = new stdClass();
+    $grade->userid   = $userid;
+    $grade->rawgrade = null;
+    instilledvideo_grade_item_update($instilledvideo, $grade);
+  } else {
+    instilledvideo_grade_item_update($instilledvideo);
+  }
 }

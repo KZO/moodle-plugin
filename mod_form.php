@@ -61,6 +61,10 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
     $mform->addRule('videofile', null, 'required', null, 'client');
 
     $this->standard_coursemodule_elements();
+
+    // Grade settings taken from scorm activity module
+    $this->standard_grading_coursemodule_elements();
+
     $this->add_action_buttons();
   }
 
