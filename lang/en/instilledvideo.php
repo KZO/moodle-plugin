@@ -40,3 +40,4 @@ $string['modulename_help'] = 'The Instilled Video activity module enables the te
 $string['videotitle'] = 'Title';
 $string['videofile'] = 'Video File';
 $string['errornovideo'] = 'Video not found!';
+$string['getvideoviewstats'] = 'Get video view stats from Instilled';
