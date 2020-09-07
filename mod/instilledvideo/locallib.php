@@ -28,8 +28,8 @@ class instilledvideo {
 
   public static function call_api($method, $url, $data = false) {
     $curl = curl_init();
-    $username = get_config('instilledvideo', 'username');
-    $api_key = get_config('instilledvideo', 'apikey');
+    $username = get_config('local_instilled_media_gallery', 'username');
+    $api_key = get_config('local_instilled_media_gallery', 'apikey');
 
     switch ($method)
     {

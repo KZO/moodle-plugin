@@ -86,11 +86,14 @@ class get_video_view_stats extends \core\task\scheduled_task {
 
   protected function get_container_stats() {
     $method = 'GET';
-    $tenant_url = get_config('instilledvideo', 'tenanturl');
-    $parent_container = get_config('instilledvideo', 'parentcontainer');
-    $url = $tenant_url . '/api/reports/media_viewed_aggregated_by_session?include=media,users&page_size_primary=100000000&page_size_related=100000000&container_id=' . $parent_container;
-
+    $tenant_url = get_config('local_instilled_media_gallery', 'tenanturl');
+    $default_container = get_config('local_instilled_media_gallery', 'defaultcontainer');
+    $url = $tenant_url . '/api/reports/media_viewed_aggregated_by_session?include=media,users&page_size_primary=100000000&page_size_related=100000000&container_id=' . $default_container;
+    echo $url;
     $stats = \mod_instilledvideo\instilledvideo::call_api($method, $url);
+    echo '<pre>';
+    print_r($stats);
+    echo '</pre>';
     $stats = json_decode($stats);
     return $stats;
   }

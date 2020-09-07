@@ -57,7 +57,7 @@ class send_video_to_instilled extends \core\task\adhoc_task {
   protected function create_medium($data) {
     $method = 'POST';
     $tenant_url = get_config('instilledvideo', 'tenanturl');
-    $parent_container = get_config('instilledvideo', 'parentcontainer');
+    $parent_container = get_config('instilledvideo', 'defaultcontainer');
     $url = $tenant_url . '/api/containers/'. $parent_container .'/medium';
     $post_data = json_encode(array('media'=>array('title' => $data->name, 'content_type' => 'VIDEO')), JSON_FORCE_OBJECT);
 

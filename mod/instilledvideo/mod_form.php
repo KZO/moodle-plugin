@@ -25,6 +25,9 @@
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once($CFG->libdir . '/filelib.php');
 
+global $PAGE;
+$PAGE->requires->js_call_amd('mod_instilledvideo/video-selector', 'init');
+
 class mod_instilledvideo_mod_form extends moodleform_mod {
 
   public function definition() {
@@ -53,12 +56,29 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
         $this->add_intro_editor();
     }
 
+    $tenant_url = get_config('local_instilled_media_gallery', 'tenanturl');
+    $default_container = get_config('local_instilled_media_gallery', 'defaultcontainer');
+
     // Video file.
-    $mform->addElement('filemanager', 'videofile',
-        get_string('videofile', 'instilledvideo'), null,
-        $this->get_filemanager_options_array()
+    $attr = array(
+      'id' => 'instilled-file-picker-iframe',
+      'height' => '300px',
+      'width' => '100%',
+      'allowfullscreen' => 'true',
+      'src' => $tenant_url.'/moodle/file-picker?containerId='.$default_container,
+      'allow' => 'autoplay *; fullscreen *; encrypted-media *; camera *; microphone *;',
+      'style' => 'border: 1px solid #d0d0d0;'
     );
-    $mform->addRule('videofile', null, 'required', null, 'client');
+
+    $iframe = html_writer::tag('iframe', '', $attr);
+    $html = '<div class="form-group row fitem"><div class="col-md-3"><label class="col-form-label d-inline" for="id_instilledvideo">'.
+        get_string('videofile', 'instilledvideo')
+      .'</label></div><div class="col-md-9">'. $iframe .'</div></div>';
+    $mform->addElement('html', $html);
+
+    $mform->addElement('text', 'mediumid', get_string('videofile', 'instilledvideo'));
+    $mform->setType('mediumid', PARAM_TEXT);
+    $mform->addRule('mediumid', null, 'required', null, 'client');
 
     $this->standard_coursemodule_elements();
 

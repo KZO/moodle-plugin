@@ -15,23 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Adhoc task that updates all of the existing forum_post records with no wordcount or no charcount.
+ * Code fragment to define the version of the instilledvideo module
  *
  * @package    mod
  * @subpackage instilledvideo
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
 
-defined('MOODLE_INTERNAL') || die();
 
-$tasks = [
-  [
-    'classname' => 'mod_instilledvideo\task\get_video_view_stats',
-    'blocking' => 0,
-    'minute' => '*/10',
-    'hour' => '*',
-    'day' => '*',
-    'month' => '*',
-    'dayofweek' => '*',
-  ],
-];
+defined('MOODLE_INTERNAL') || die();
+$plugin->version  = 2020080132;  // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2019111800;  // Requires this Moodle version (moodle 3.8.x).
+$plugin->cron     = 4 * 3600;    // Period for cron to check this module (secs).
+$plugin->component = 'mod_instilledvideo';
+$plugin->dependencies = array();
+$plugin->release  = '0.0.1';     // Human-friendly version name.
+// MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC, MATURITY_STABLE.
+$plugin->maturity = MATURITY_BETA;
