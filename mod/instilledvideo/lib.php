@@ -182,7 +182,7 @@ function instilledvideo_pluginfile($course, $cm, $context, $filearea, $args, $fo
  */
 function instilledvideo_grade_item_update($instilledvideo, $grades=null) {
   global $CFG, $DB;
-  require_once($CFG->dirroot.'/mod/instilledvideo/locallib.php');
+
   if (!function_exists('grade_update')) { // Workaround for buggy PHP versions.
     require_once($CFG->libdir.'/gradelib.php');
   }
