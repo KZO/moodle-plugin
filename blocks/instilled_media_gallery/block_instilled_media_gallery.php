@@ -8,6 +8,8 @@ class block_instilled_media_gallery extends block_base {
   }
 
   function get_content() {
+    global $USER, $CFG, $DB;
+
     if(!is_null($this->content)) {
       return $this->content;
     }
@@ -15,6 +17,12 @@ class block_instilled_media_gallery extends block_base {
     $this->content = new stdClass();
     $this->content->text = '';
     $this->content->footer = '';
+
+    $course = $this->page->course;
+    $context = context_course::instance($course->id);
+    if (!has_capability('mod/instilledvideo:addinstance', $context)) {
+      return;
+    }
 
     if($context = $this->get_course_context()) {
       $this->content->text = $this->get_instilled_media_gallery_link($context->instanceid);
