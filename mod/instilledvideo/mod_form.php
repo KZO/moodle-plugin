@@ -70,6 +70,9 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
     $mform->addRule('mediumid', null, 'required', null, 'client');
     $mform->addElement('html', '</div>');
 
+    $mform->addElement('checkbox', 'showcomments', get_string('showcomments', 'instilledvideo'));
+    $mform->setType('showcomments', PARAM_BOOL);
+
     $this->standard_coursemodule_elements();
 
     // Grade settings taken from scorm activity module

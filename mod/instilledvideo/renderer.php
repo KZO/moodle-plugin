@@ -20,13 +20,14 @@ class mod_instilledvideo_renderer extends plugin_renderer_base {
     if(!$instilledvideo) {
       $output .= $this->output->heading(get_string("errornovideo", "instilledvideo"));
     } else {
+      $show_comments = $instilledvideo->showcomments ? '' : '&display=vid';
       $output .= '<div>' . $instilledvideo->intro . '</div>';
       $attr = array(
         'id' => 'instilled-video-iframe',
         'height' => '640',
         'width' => '400',
         'allowfullscreen' => 'true',
-        'src' => $tenant_url .'/player/medium/'. $instilledvideo->mediumid .'?embed=true&display=vid&overlay=false&username=' . $USER->username .'&accessKey='. $USER->instilledaccesskey,
+        'src' => $tenant_url .'/player/medium/'. $instilledvideo->mediumid .'?embed=true&'.$show_comments.'&overlay=false&username=' . $USER->username .'&accessKey='. $USER->instilledaccesskey,
         'allow' => 'autoplay *; fullscreen *; encrypted-media *; camera *; microphone *;',
         'style' => 'width: 100%; height: 640px; border: none'
       );
