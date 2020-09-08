@@ -1,32 +1,14 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+namespace local_instilled_media_gallery;
 
-namespace mod_instilledvideo;
-
-/**
- * Event observers
- *
- * @package   instilledvideo
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 defined('MOODLE_INTERNAL') || die();
 
-class instilledvideo {
+class instilled {
 
   public static function call_api($method, $url, $data = false) {
+    // If testing locally, replace local API calls with test tenant.
+    $url = str_replace('https://localhost:8001', 'https://lxp.instilled.com', $url);
+
     $curl = curl_init();
     $username = get_config('local_instilled_media_gallery', 'username');
     $api_key = get_config('local_instilled_media_gallery', 'apikey');
@@ -47,6 +29,7 @@ class instilledvideo {
           $url = sprintf("%s?%s", $url, http_build_query($data));
     }
 
+    curl_setopt($curl, CURLOPT_FAILONERROR, 1);
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
@@ -59,6 +42,9 @@ class instilledvideo {
     ));
 
     $response = curl_exec($curl);
+    if (curl_errno($curl)) {
+      $error = curl_errno($curl);
+    }
 
     curl_close($curl);
 
@@ -80,13 +66,13 @@ class instilledvideo {
 
   protected function check_user_exists($username) {
     $method = 'GET';
-    $tenant_url = get_config('instilledvideo', 'tenanturl');
+    $tenant_url = get_config('local_instilled_media_gallery', 'tenanturl');
     $url = $tenant_url . '/api/users/'. $username;
 
-    $user = \mod_instilledvideo\instilledvideo::call_api($method, $url);
+    $user = \local_instilled_media_gallery\instilled::call_api($method, $url);
     $user = json_decode($user);
 
-    if (property_exists($user, 'users') && property_exists($user->users, 'id')) {
+    if ($user && property_exists($user, 'users') && property_exists($user->users, 'id')) {
       return true;
     }
     return false;
@@ -95,7 +81,7 @@ class instilledvideo {
   protected function create_instilled_user() {
     global $USER;
     $method = 'POST';
-    $tenant_url = get_config('instilledvideo', 'tenanturl');
+    $tenant_url = get_config('local_instilled_media_gallery', 'tenanturl');
     $url = $tenant_url . '/api/users';
     $post_data = json_encode(array('users'=>array(
       'username' => $USER->username,
@@ -106,14 +92,14 @@ class instilledvideo {
       'last_name' => $USER->lastname,
     )), JSON_FORCE_OBJECT);
 
-    $new_user = \mod_instilledvideo\instilledvideo::call_api($method, $url, $post_data);
+    $new_user = \local_instilled_media_gallery\instilled::call_api($method, $url, $post_data);
     $new_user = json_decode($new_user);
     return $new_user;
   }
 
   protected function create_access_key($username) {
     $method = 'POST';
-    $tenant_url = get_config('instilledvideo', 'tenanturl');
+    $tenant_url = get_config('local_instilled_media_gallery', 'tenanturl');
     $url = $tenant_url . '/api/access_keys/platform';
     $expires = new \DateTime();
     $expires->modify('+1 day');
@@ -124,7 +110,7 @@ class instilledvideo {
       'expires_at' => $expires->format('Y-m-d\TH:i:s') . '.000Z',
     )), JSON_FORCE_OBJECT);
 
-    $access_key = \mod_instilledvideo\instilledvideo::call_api($method, $url, $post_data);
+    $access_key = \local_instilled_media_gallery\instilled::call_api($method, $url, $post_data);
     $access_key = json_decode($access_key);
     return $access_key->access_keys->key;
   }
