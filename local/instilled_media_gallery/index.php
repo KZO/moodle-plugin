@@ -1,9 +1,16 @@
 <?php
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
+require_once($CFG->dirroot . '/local/instilled_media_gallery/lib.php');
 
 global $USER, $PAGE;
 
+if (!property_exists($USER, 'instilledaccesskey') || !$USER->instilledaccesskey) {
+  $instilled = new \local_instilled_media_gallery\instilled();
+  $instilled->authenticate_user();
+}
+
 require_login();
+
 $courseid = required_param('courseid', PARAM_INT);
 
 $context = context_course::instance($courseid);
@@ -30,13 +37,13 @@ $default_container = get_config('local_instilled_media_gallery', 'defaultcontain
 
 // Request the launch content with an iframe tag.
 $attr = array(
-    'id' => 'instilled-media-gallery-iframe',
-    'height' => '700px',
-    'width' => '100%',
-    'allowfullscreen' => 'true',
-    'src' => $tenant_url.'/moodle/media-gallery?containerId='.$default_container,
-    'allow' => 'autoplay *; fullscreen *; encrypted-media *; camera *; microphone *;',
-    'style' => 'border: 1px solid #d0d0d0;'
+  'id' => 'instilled-media-gallery-iframe',
+  'height' => '700px',
+  'width' => '100%',
+  'allowfullscreen' => 'true',
+  'src' => $tenant_url.'/moodle/media-gallery?containerId='.$default_container.'&username=' . $USER->username .'&accessKey='. $USER->instilledaccesskey,
+  'allow' => 'autoplay *; fullscreen *; encrypted-media *; camera *; microphone *;',
+  'style' => 'border: 1px solid #d0d0d0;'
 );
 echo html_writer::tag('iframe', '', $attr);
 
