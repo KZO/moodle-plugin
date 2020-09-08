@@ -9,3 +9,6 @@ $string['videotitle'] = 'Title';
 $string['videofile'] = 'Video File';
 $string['errornovideo'] = 'Video not found!';
 $string['getvideoviewstats'] = 'Get video view stats from Instilled';
+
+$string['youcanupload'] = 'You can upload videos in the';
+$string['instilledmediagallery'] = 'Instilled Media Gallery';
