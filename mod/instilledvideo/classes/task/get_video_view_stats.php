@@ -1,33 +1,10 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-/**
- * Adhoc task that updates all of the existing forum_post records with no wordcount or no charcount.
- *
- * @package    mod
- * @subpackage instilledvideo
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_instilledvideo\task;
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/instilledvideo/lib.php');
-require_once($CFG->dirroot.'/mod/instilledvideo/locallib.php');
+require_once($CFG->dirroot.'/local/instilled_media_gallery/lib.php');
  
 class get_video_view_stats extends \core\task\scheduled_task {
  
@@ -56,7 +33,7 @@ class get_video_view_stats extends \core\task\scheduled_task {
       if (!$instance) continue;
 
       $video_duration = $users['duration'];
-      echo $video_duration;
+      echo $video_duration.'vid_duration';
       unset($users['duration']);
 
       $grades = array();
@@ -90,10 +67,7 @@ class get_video_view_stats extends \core\task\scheduled_task {
     $default_container = get_config('local_instilled_media_gallery', 'defaultcontainer');
     $url = $tenant_url . '/api/reports/media_viewed_aggregated_by_session?include=media,users&page_size_primary=100000000&page_size_related=100000000&container_id=' . $default_container;
     echo $url;
-    $stats = \mod_instilledvideo\instilledvideo::call_api($method, $url);
-    echo '<pre>';
-    print_r($stats);
-    echo '</pre>';
+    $stats = \local_instilled_media_gallery\instilled::call_api($method, $url);
     $stats = json_decode($stats);
     return $stats;
   }
