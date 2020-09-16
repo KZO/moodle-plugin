@@ -1,6 +1,6 @@
 <?php
 defined('MOODLE_INTERNAL') || die();
-$plugin->version  = 2020090104;
+$plugin->version  = 2020090109;
 $plugin->requires = 2019111800;
 $plugin->cron     = 4 * 3600;
 $plugin->component = 'mod_instilledvideo';

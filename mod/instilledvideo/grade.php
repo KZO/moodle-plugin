@@ -27,21 +27,24 @@ require_once("../../config.php");
 $id = required_param('id', PARAM_INT); // Course module ID.
 
 if (!$cm = get_coursemodule_from_id('instilledvideo', $id)) {
-  print_error('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 if (!$instilledvideo = $DB->get_record('instilledvideo', array('id' => $cm->instance))) {
-  print_error('invalidcoursemodule');
+    print_error('invalidcoursemodule');
 }
 
 if (!$course = $DB->get_record('course', array('id' => $instilledvideo->course))) {
-  print_error('coursemisconf');
+    print_error('coursemisconf');
 }
 
 require_login($course, false, $cm);
 
-if (has_capability('mod/instilledvideo:viewreport', context_module::instance($cm->id))) {
-  redirect('report.php?id='.$cm->id);
-} else {
-  redirect('view.php?id='.$cm->id);
-}
+redirect('view.php?id='.$cm->id);
+
+// TO DO: Create a customized report for teachers
+// if (has_capability('mod/instilledvideo:viewreport', context_module::instance($cm->id))) {
+//     redirect('report.php?id='.$cm->id);
+// } else {
+//     redirect('view.php?id='.$cm->id);
+// }

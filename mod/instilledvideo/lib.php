@@ -30,14 +30,14 @@ defined('MOODLE_INTERNAL') || die();
  * @return true | null True if the feature is supported, null otherwise.
  */
 function instilledvideo_supports($feature) {
-  switch ($feature) {
-    case FEATURE_MOD_INTRO:
-      return true;
-    case FEATURE_GRADE_HAS_GRADE:
-      return true;
-    default:
-      return null;
-  }
+    switch ($feature) {
+        case FEATURE_MOD_INTRO:
+        return true;
+        case FEATURE_GRADE_HAS_GRADE:
+        return true;
+        default:
+        return null;
+    }
 }
 
 /**
@@ -52,20 +52,20 @@ function instilledvideo_supports($feature) {
  * @return int The id of the newly inserted record.
  */
 function instilledvideo_add_instance($moduleinstance, $mform = null) {
-  global $DB;
-  global $COURSE;
+    global $DB;
+    global $COURSE;
 
-  $cmid = $moduleinstance->coursemodule;
-  $moduleinstance->timecreated = time();
+    $cmid = $moduleinstance->coursemodule;
+    $moduleinstance->timecreated = time();
 
-  $id = $DB->insert_record('instilledvideo', $moduleinstance);
+    $id = $DB->insert_record('instilledvideo', $moduleinstance);
 
-  $moduleinstance->instance = $id;
-  $moduleinstance->id = $id;
+    $moduleinstance->instance = $id;
+    $moduleinstance->id = $id;
 
-  instilledvideo_grade_item_update($moduleinstance);
+    instilledvideo_grade_item_update($moduleinstance);
 
-  return $id;
+    return $id;
 }
 
 /**
@@ -79,14 +79,14 @@ function instilledvideo_add_instance($moduleinstance, $mform = null) {
 * @return bool True if successful, false otherwise.
 */
 function instilledvideo_update_instance($moduleinstance, $mform = null) {
-  global $DB;
+    global $DB;
 
-  $moduleinstance->timemodified = time();
-  $moduleinstance->id = $moduleinstance->instance;
+    $moduleinstance->timemodified = time();
+    $moduleinstance->id = $moduleinstance->instance;
 
-  instilledvideo_grade_item_update($moduleinstance);
+    instilledvideo_grade_item_update($moduleinstance);
 
-  return $DB->update_record('instilledvideo', $moduleinstance);
+    return $DB->update_record('instilledvideo', $moduleinstance);
 }
 
 /**
@@ -96,16 +96,16 @@ function instilledvideo_update_instance($moduleinstance, $mform = null) {
 * @return bool True if successful, false on failure.
 */
 function instilledvideo_delete_instance($id) {
-  global $DB;
+    global $DB;
 
-  $exists = $DB->get_record('instilledvideo', array('id' => $id));
-  if (!$exists) {
-      return false;
-  }
+    $exists = $DB->get_record('instilledvideo', array('id' => $id));
+    if (!$exists) {
+        return false;
+    }
 
-  $DB->delete_records('instilledvideo', array('id' => $id));
+    $DB->delete_records('instilledvideo', array('id' => $id));
 
-  return true;
+    return true;
 }
 
 /**
@@ -117,27 +117,27 @@ function instilledvideo_delete_instance($id) {
  * @return object grade_item
  */
 function instilledvideo_grade_item_update($instilledvideo, $grades=null) {
-  global $CFG, $DB;
+    global $CFG, $DB;
 
-  if (!function_exists('grade_update')) { // Workaround for buggy PHP versions.
-    require_once($CFG->libdir.'/gradelib.php');
-  }
+    if (!function_exists('grade_update')) { // Workaround for buggy PHP versions.
+        require_once($CFG->libdir.'/gradelib.php');
+    }
 
-  $params = array('itemname' => $instilledvideo->name);
-  if (isset($instilledvideo->cmidnumber)) {
-    $params['idnumber'] = $instilledvideo->cmidnumber;
-  }
+    $params = array('itemname' => $instilledvideo->name);
+    if (isset($instilledvideo->cmidnumber)) {
+        $params['idnumber'] = $instilledvideo->cmidnumber;
+    }
 
-  $params['gradetype'] = GRADE_TYPE_VALUE;
-  $params['grademax']  = 100;
-  $params['grademin']  = 0;
+    $params['gradetype'] = GRADE_TYPE_VALUE;
+    $params['grademax']  = 100;
+    $params['grademin']  = 0;
 
-  if ($grades === 'reset') {
-    $params['reset'] = true;
-    $grades = null;
-  }
+    if ($grades === 'reset') {
+        $params['reset'] = true;
+        $grades = null;
+    }
 
-  return grade_update('mod/instilledvideo', $instilledvideo->course, 'mod', 'instilledvideo', $instilledvideo->id, 0, $grades, $params);
+    return grade_update('mod/instilledvideo', $instilledvideo->course, 'mod', 'instilledvideo', $instilledvideo->id, 0, $grades, $params);
 }
 
 /**
@@ -149,17 +149,15 @@ function instilledvideo_grade_item_update($instilledvideo, $grades=null) {
  * @param bool $nullifnone
  */
 function instilledvideo_update_grades($instilledvideo, $userid=0, $nullifnone=true) {
-  global $CFG;
-  require_once($CFG->libdir.'/gradelib.php');
+    global $CFG;
+    require_once($CFG->libdir.'/gradelib.php');
 
-  if ($grades = instilledvideo_get_user_grades($instilledvideo, $userid)) {
-    instilledvideo_grade_item_update($instilledvideo, $grades);
-  } else if ($userid and $nullifnone) {
-    $grade = new stdClass();
-    $grade->userid   = $userid;
-    $grade->rawgrade = null;
-    instilledvideo_grade_item_update($instilledvideo, $grade);
-  } else {
-    instilledvideo_grade_item_update($instilledvideo);
-  }
+    if ($userid and $nullifnone) {
+        $grade = new stdClass();
+        $grade->userid   = $userid;
+        $grade->rawgrade = null;
+        instilledvideo_grade_item_update($instilledvideo, $grade);
+    } else {
+        instilledvideo_grade_item_update($instilledvideo);
+    }
 }
