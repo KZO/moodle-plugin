@@ -17,9 +17,9 @@
  * Description.
  *
  * @since Moodle 3.7
- * @package	local_instilled_media_gallery
- * @copyright  2020 Instilled <support@instilled.com>
- * @license	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package local_instilled_media_gallery
+ * @copyright 2020 Instilled <support@instilled.com>
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['pluginname'] = 'Instilled Media Gallery';
 $string['heading_mediagallery'] = 'Instilled Media Gallery';
@@ -45,3 +45,8 @@ $string['privacy:metadata:role'] = 'The role in the course for the user accessin
 $string['privacy:metadata:userid'] = 'The ID of the user accessing Instilled';
 $string['privacy:metadata:useridnumber'] = 'The ID number of the user accessing Instilled';
 $string['privacy:metadata:username'] = 'The username of the user accessing Instilled';
+$string['privacy:metadata:custompublishdata'] = 'The custompublishdata of the user accessing Instilled';
+
+$string['privacy:metadata:editor'] = 'The editor of the user accessing Instilled';
+$string['privacy:metadata:module'] = 'The module of the user accessing Instilled';
+$string['privacy:metadata:source'] = 'The source of the user accessing Instilled';

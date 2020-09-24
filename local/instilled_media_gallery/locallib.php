@@ -17,9 +17,9 @@
  * Description.
  *
  * @since Moodle 3.7
- * @package	local_instilled_media_gallery
+ * @package local_instilled_media_gallery
  * @copyright  2020 Instilled <support@instilled.com>
- * @license	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace local_instilled_media_gallery;
 
@@ -41,7 +41,7 @@ class instilled {
                 curl_setopt($curl, CURLOPT_POST, 1);
                 if ($data) {
                     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                }  
+                }
                 break;
             case 'PUT':
                 curl_setopt($curl, CURLOPT_PUT, 1);
@@ -52,26 +52,26 @@ class instilled {
                 }
         }
 
-      curl_setopt($curl, CURLOPT_FAILONERROR, 1);
-      curl_setopt($curl, CURLOPT_URL, $url);
-      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_FAILONERROR, 1);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
-      curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-          'X-KZO-Auth-AccessKey: ' . $apikey,
-          'X-KZO-Auth-Username: ' . $username,
-          'X-KZO-Accept-API-Versions: 1',
-          'Content-Type: application/vnd.api+json',
-          'X-KZO-Pipeline-Action: Process'
-      ));
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'X-KZO-Auth-AccessKey: ' . $apikey,
+            'X-KZO-Auth-Username: ' . $username,
+            'X-KZO-Accept-API-Versions: 1',
+            'Content-Type: application/vnd.api+json',
+            'X-KZO-Pipeline-Action: Process'
+        ));
 
-      $response = curl_exec($curl);
-      if (curl_errno($curl)) {
-          $error = curl_errno($curl);
-      }
+        $response = curl_exec($curl);
+        if (curl_errno($curl)) {
+            $error = curl_errno($curl);
+        }
 
-      curl_close($curl);
+        curl_close($curl);
 
-      return $response;
+        return $response;
     }
 
     /**
@@ -140,14 +140,16 @@ class instilled {
         $method = 'POST';
         $tenanturl = get_config('local_instilled_media_gallery', 'tenanturl');
         $url = $tenanturl . '/api/users';
-        $postdata = json_encode(array('users'=>array(
-            'username' => $USER->username,
-            'email' => $USER->email,
-            'password' => md5(rand()),
-            'authentication_type' => 'PASSWORD',
-            'first_name' => $USER->firstname,
-            'last_name' => $USER->lastname,
-        )), JSON_FORCE_OBJECT);
+        $postdata = json_encode(array(
+            'users' => array(
+                'username' => $USER->username,
+                'email' => $USER->email,
+                'password' => md5(rand()),
+                'authentication_type' => 'PASSWORD',
+                'first_name' => $USER->firstname,
+                'last_name' => $USER->lastname,
+            )
+        ), JSON_FORCE_OBJECT);
 
         $newuser = self::call_api($method, $url, $postdata);
         $newuser = json_decode($newuser);
@@ -166,7 +168,7 @@ class instilled {
         $expires->modify('+6 hours');
         $expires->setTimezone(new \DateTimeZone('UTC'));
 
-        $postdata = json_encode(array('access_keys'=> array(
+        $postdata = json_encode(array('access_keys' => array(
             'username' => $username,
             'expires_at' => $expires->format('Y-m-d\TH:i:s') . '.000Z',
         )), JSON_FORCE_OBJECT);

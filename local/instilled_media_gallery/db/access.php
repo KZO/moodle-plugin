@@ -17,10 +17,13 @@
  * Description.
  *
  * @since Moodle 3.7
- * @package	local_instilled_media_gallery
+ * @package local_instilled_media_gallery
  * @copyright  2020 Instilled <support@instilled.com>
- * @license	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die;
+
 $capabilities = array(
     'local/instilled_media_gallery:view' => array(
             'captype' => 'read',

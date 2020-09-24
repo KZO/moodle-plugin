@@ -17,9 +17,9 @@
  * Description.
  *
  * @since Moodle 3.7
- * @package	local_instilled_media_gallery
+ * @package local_instilled_media_gallery
  * @copyright  2020 Instilled <support@instilled.com>
- * @license	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once($CFG->dirroot . '/local/instilled_media_gallery/locallib.php');
