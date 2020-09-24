@@ -17,17 +17,18 @@
  * Description.
  *
  * @since Moodle 3.7
- * @package	block_instilled_media_gallery
- * @copyright  2020 Instilled <support@instilled.com>
- * @license	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package block_instilled_media_gallery
+ * @copyright 2020 Instilled <support@instilled.com>
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace block_instilled_media_gallery\privacy;
 
-class provider implements
+defined('MOODLE_INTERNAL') || die();
+
+class provider implements \core_privacy\local\metadata\null_provider {
     // This plugin does not store any personal user data.
-    \core_privacy\local\metadata\null_provider {
- 
+
     /**
      * Get the language string identifier with the component's language
      * file to explain why this plugin stores no data.

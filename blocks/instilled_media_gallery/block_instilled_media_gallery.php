@@ -17,9 +17,9 @@
  * Description.
  *
  * @since Moodle 3.7
- * @package	block_instilled_media_gallery
- * @copyright  2020 Instilled <support@instilled.com>
- * @license	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package block_instilled_media_gallery
+ * @copyright 2020 Instilled <support@instilled.com>
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -70,12 +70,12 @@ class block_instilled_media_gallery extends block_base {
 
     /**
      * Returns a link to the media gallery.
-     *
+     * @param int $courseid ID of a Course.
      * @return string
      */
-    private function get_instilled_media_gallery_link($courseId) {
+    private function get_instilled_media_gallery_link($courseid) {
         $galleryurl = new moodle_url('/local/instilled_media_gallery/index.php', array(
-        'courseid' => $courseId
+        'courseid' => $courseid
         ));
 
         $link = html_writer::tag('a', get_string('nav_mediagallery', 'block_instilled_media_gallery'), array(
