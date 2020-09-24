@@ -1,4 +1,29 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Form for mod_instilledvideo
+ *
+ * @package   mod_instilledvideo
+ * @copyright 2020 Instilled <support@instilled.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die;
+
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once($CFG->libdir . '/filelib.php');
 require_once($CFG->dirroot . '/local/instilled_media_gallery/locallib.php');
@@ -15,7 +40,7 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
 
         if (isset($courseid)) {
             $context = context_course::instance($courseid);
-        } elseif (isset($updateid)) {
+        } else if (isset($updateid)) {
             $cm = $DB->get_record('course_modules', array('id' => $updateid));
             $courseid = $cm->course;
             $context = context_course::instance($courseid);
@@ -40,7 +65,7 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
         $output .= get_string('youcanupload', 'instilledvideo').' '.$link;
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('div');
-    
+
         $mform->addElement('html', $output);
 
         $mform->addElement('text', 'name', get_string('videotitle', 'instilledvideo'), array('size' => '64'));
@@ -100,7 +125,7 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
 
         $this->standard_coursemodule_elements();
 
-        // Grade settings taken from scorm activity module
+        // Grade settings taken from scorm activity module.
         $this->standard_grading_coursemodule_elements();
 
         $this->add_action_buttons();

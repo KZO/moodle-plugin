@@ -13,27 +13,27 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Description.
+ * Task for mod_instilledvideo
  *
- * @since Moodle 3.7
- * @package	local_instilled_media_gallery
- * @copyright  2020 Instilled <support@instilled.com>
- * @license	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_instilledvideo
+ * @copyright 2020 Instilled <support@instilled.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_instilledvideo\task;	
+namespace mod_instilledvideo\task;
 
-defined('MOODLE_INTERNAL') || die();	
+defined('MOODLE_INTERNAL') || die();
 
-require_once ($CFG->dirroot . '/local/instilled_media_gallery/locallib.php');	
+require_once($CFG->dirroot . '/local/instilled_media_gallery/locallib.php');
 
-/**	
- * Adhoc task that gets video view stats for a specific user.	
- */	
-class get_video_view_stats extends \core\task\adhoc_task {	
+/**
+ * Adhoc task that gets video view stats for a specific user.
+ */
+class get_video_view_stats extends \core\task\adhoc_task {
 
-    public function execute() {	
+    public function execute() {
         mtrace('My task started');
         $data = $this->get_custom_data();
 
@@ -47,18 +47,18 @@ class get_video_view_stats extends \core\task\adhoc_task {
         $percentviewed = $this->calculate_percent_viewed($viewdata);
         $this->update_gradebook($username, $mediumid, $percentviewed);
 
-        mtrace('My task ended');	
+        mtrace('My task ended');
     }
 
-    /**	
+    /**
      * Get video view statistics for the user and medium.
      */
-    protected function get_video_view_data($accesskey, $username, $mediumid) {	
-        $method = 'GET';	
+    protected function get_video_view_data($accesskey, $username, $mediumid) {
+        $method = 'GET';
         $tenanturl = get_config('local_instilled_media_gallery', 'tenanturl');
         $url = $tenanturl . '/api/media/'. $mediumid .'?include=unique_viewed_ranges';
 
-        $result = \local_instilled_media_gallery\instilled::call_api($method, $url, false, $username, $accesskey);	
+        $result = \local_instilled_media_gallery\instilled::call_api($method, $url, false, $username, $accesskey);
         $result = json_decode($result);
 
         $fragments = $result->linked->unique_viewed_ranges[0]->unique_viewed_ranges;
@@ -70,9 +70,9 @@ class get_video_view_stats extends \core\task\adhoc_task {
         );
     }
 
-    /**	
+    /**
      * Calculate the total percentage of video viewed.
-     */	
+     */
     protected function calculate_percent_viewed($viewdata) {
         $fragments = $viewdata[0];
         $duration = $viewdata[1];
@@ -92,9 +92,9 @@ class get_video_view_stats extends \core\task\adhoc_task {
         return $percentviewed;
     }
 
-    /**	
+    /**
      * Update the gradebook with the percentage viewed
-     */	
+     */
     protected function update_gradebook($username, $mediumid, $percentviewed) {
         global $DB;
         $instance = $DB->get_record('instilledvideo', array('mediumid' => $mediumid), '*', IGNORE_MISSING);

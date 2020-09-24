@@ -13,13 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Description.
+ * Privacy Subsystem implementation for mod_instilledvideo.
  *
- * @since Moodle 3.7
- * @package	local_instilled_media_gallery
- * @copyright  2020 Instilled <support@instilled.com>
- * @license	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_instilledvideo
+ * @copyright 2020 Instilled <support@instilled.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_instilledvideo\privacy;
