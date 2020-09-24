@@ -21,6 +21,7 @@
  * @subpackage instilledvideo
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -69,15 +70,15 @@ function instilledvideo_add_instance($moduleinstance, $mform = null) {
 }
 
 /**
-* Updates an instance of the mod_instilledvideo in the database.
-*
-* Given an object containing all the necessary data (defined in mod_form.php),
-* this function will update an existing instance with new data.
-*
-* @param object $moduleinstance An object from the form in mod_form.php.
-* @param mod_instilledvideo_mod_form $mform The form.
-* @return bool True if successful, false otherwise.
-*/
+ * Updates an instance of the mod_instilledvideo in the database.
+ *
+ * Given an object containing all the necessary data (defined in mod_form.php),
+ * this function will update an existing instance with new data.
+ *
+ * @param object $moduleinstance An object from the form in mod_form.php.
+ * @param mod_instilledvideo_mod_form $mform The form.
+ * @return bool True if successful, false otherwise.
+ */
 function instilledvideo_update_instance($moduleinstance, $mform = null) {
     global $DB;
 
@@ -90,11 +91,11 @@ function instilledvideo_update_instance($moduleinstance, $mform = null) {
 }
 
 /**
-* Removes an instance of the mod_instilledvideo from the database.
-*
-* @param int $id Id of the module instance.
-* @return bool True if successful, false on failure.
-*/
+ * Removes an instance of the mod_instilledvideo from the database.
+ *
+ * @param int $id Id of the module instance.
+ * @return bool True if successful, false on failure.
+ */
 function instilledvideo_delete_instance($id) {
     global $DB;
 
