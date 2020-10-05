@@ -85,6 +85,10 @@ function instilledvideo_update_instance($moduleinstance, $mform = null) {
     $moduleinstance->timemodified = time();
     $moduleinstance->id = $moduleinstance->instance;
 
+    if (empty($moduleinstance->showcomments)) {
+        $moduleinstance->showcomments = 0;
+    }
+
     instilledvideo_grade_item_update($moduleinstance);
 
     return $DB->update_record('instilledvideo', $moduleinstance);
