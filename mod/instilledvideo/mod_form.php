@@ -44,6 +44,8 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
             $cm = $DB->get_record('course_modules', array('id' => $updateid));
             $courseid = $cm->course;
             $context = context_course::instance($courseid);
+            $activitymodule = $DB->get_record('instilledvideo', array('course' => $cm->course));
+            $mediumid = $activitymodule->mediumid;
         }
 
         $instilled = new \local_instilled_media_gallery\instilled();
@@ -89,13 +91,18 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
         $tenanturl = get_config('local_instilled_media_gallery', 'tenanturl');
         $defaultcontainer = get_config('local_instilled_media_gallery', 'defaultcontainer');
 
+        $mediumquerystring = '';
+        if (isset($mediumid)) {
+            $mediumquerystring = '&mediumId=' . $mediumid;
+        }
+
         // Video file.
         $attr = array(
             'id' => 'instilled-file-picker-iframe',
             'height' => '300px',
             'width' => '100%',
             'allowfullscreen' => 'true',
-            'src' => $tenanturl.'/moodle/file-picker?containerId='.$defaultcontainer.'&username=' . $USER->username .'&accessKey='. $instilledaccesskey,
+            'src' => $tenanturl.'/moodle/file-picker?containerId='.$defaultcontainer.'&username=' . $USER->username .'&accessKey='. $instilledaccesskey . $mediumquerystring,
             'allow' => 'autoplay *; fullscreen *; encrypted-media *; camera *; microphone *;',
             'style' => 'border: 1px solid #d0d0d0;'
         );
