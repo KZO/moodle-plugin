@@ -30,12 +30,15 @@ $string['pluginadministration'] = 'Instilled Video Administration';
 $string['modulename_help'] = 'The Instilled Video activity module enables the teacher to upload a video that can be shown to students.';
 $string['videotitle'] = 'Title';
 $string['videofile'] = 'Video File';
+$string['videofileid'] = 'Video File ID';
 $string['showcomments'] = 'Show video comments';
 $string['errornovideo'] = 'Video not found!';
 $string['getvideoviewstats'] = 'Get video view stats from Instilled';
 
 $string['youcanupload'] = 'You can upload videos in the';
 $string['instilledmediagallery'] = 'Instilled Media Gallery';
+$string['videofileidhelper'] = 'Select a video above to automatically populate the video file ID below.';
+$string['videofileidplaceholder'] = 'Select a video above';
 
 $string['instilledvideo:addinstance'] = 'Add a new Instilled Video resource';
 $string['instilledvideo:view'] = 'View Instilled Video content';

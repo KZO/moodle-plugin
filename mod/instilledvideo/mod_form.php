@@ -44,7 +44,7 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
             $cm = $DB->get_record('course_modules', array('id' => $updateid));
             $courseid = $cm->course;
             $context = context_course::instance($courseid);
-            $activitymodule = $DB->get_record('instilledvideo', array('course' => $cm->course));
+            $activitymodule = $DB->get_record('instilledvideo', array('id' => $cm->instance));
             $mediumid = $activitymodule->mediumid;
         }
 
@@ -55,20 +55,6 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
 
         // General options.
         $mform->addElement('header', 'general', get_string('general', 'form'));
-
-        $link = $this->get_instilled_media_gallery_link($courseid);
-        $attr = array(
-            'class' => 'form-group row'
-        );
-        $output = html_writer::start_tag('div', array('class' => 'form-group row'));
-        $output .= html_writer::start_tag('div', array('class' => 'col-md-3'));
-        $output .= html_writer::end_tag('div');
-        $output .= html_writer::start_tag('div', array('class' => 'col-md-9'));
-        $output .= get_string('youcanupload', 'instilledvideo').' '.$link;
-        $output .= html_writer::end_tag('div');
-        $output .= html_writer::end_tag('div');
-
-        $mform->addElement('html', $output);
 
         $mform->addElement('text', 'name', get_string('videotitle', 'instilledvideo'), array('size' => '64'));
 
@@ -96,11 +82,15 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
             $mediumquerystring = '&mediumId=' . $mediumid;
         }
 
+        $link = $this->get_instilled_media_gallery_link($courseid);
+        $output = get_string('youcanupload', 'instilledvideo').' '.$link;
+        $mform->addElement('static', 'uploadhelpertext', null, $output);
+
         // Video file.
         $attr = array(
             'id' => 'instilled-file-picker-iframe',
-            'height' => '300px',
-            'width' => '100%',
+            'height' => '400',
+            'width' => '900',
             'allowfullscreen' => 'true',
             'src' => $tenanturl.'/moodle/file-picker?containerId='.$defaultcontainer.'&username=' . $USER->username .'&accessKey='. $instilledaccesskey . $mediumquerystring,
             'allow' => 'autoplay *; fullscreen *; encrypted-media *; camera *; microphone *;',
@@ -109,23 +99,12 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
 
         $iframe = html_writer::tag('iframe', '', $attr);
 
-        $output = html_writer::start_tag('div', array('class' => 'form-group row'));
-        $output .= html_writer::start_tag('div', array('class' => 'col-md-3'));
-        $output .= html_writer::start_tag('label', array('class' => 'col-form-label d-inline', 'for' => 'id_instilledvideo'));
-        $output .= get_string('videofile', 'instilledvideo');
-        $output .= html_writer::end_tag('label');
-        $output .= html_writer::end_tag('div');
-        $output .= html_writer::start_tag('div', array('class' => 'col-md-9'));
-        $output .= $iframe;
-        $output .= html_writer::end_tag('div');
-        $output .= html_writer::end_tag('div');
-        $mform->addElement('html', $output);
+        $mform->addElement('static', 'iframefilepicker', get_string('videofile', 'instilledvideo'), $iframe);
 
-        $mform->addElement('html', '<div style="display: none;">');
-        $mform->addElement('text', 'mediumid', get_string('videofile', 'instilledvideo'));
+        $mform->addElement('static', 'videofileidhelper', null, get_string('videofileidhelper', 'instilledvideo'));
+        $mform->addElement('text', 'mediumid', get_string('videofileid', 'instilledvideo'), array('size' => '25', 'placeholder' => get_string('videofileidplaceholder', 'instilledvideo')));
         $mform->setType('mediumid', PARAM_TEXT);
         $mform->addRule('mediumid', null, 'required', null, 'client');
-        $mform->addElement('html', '</div>');
 
         $mform->addElement('checkbox', 'showcomments', get_string('showcomments', 'instilledvideo'));
         $mform->setType('showcomments', PARAM_BOOL);
