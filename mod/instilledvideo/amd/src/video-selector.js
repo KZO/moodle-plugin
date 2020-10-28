@@ -6,10 +6,6 @@ define(['jquery'], function($) {
           $('#id_mediumid').val(event.data);
         }
       });
-
-      window.addEventListener('instilledMessage', event => {
-        $('#id_mediumid').val(event.data);
-      });
     }
   };
 });
