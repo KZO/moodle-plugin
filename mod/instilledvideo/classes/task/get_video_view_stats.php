@@ -39,13 +39,14 @@ class get_video_view_stats extends \core\task\adhoc_task {
 
         $username = $data[0];
         $mediumid = $data[1];
+        $instanceid = $data[2];
 
         $instilled = new \local_instilled_media_gallery\instilled();
         $accesskey = $instilled->authenticate_user(null, $username);
 
         $viewdata = $this->get_video_view_data($accesskey, $username, $mediumid);
         $percentviewed = $this->calculate_percent_viewed($viewdata);
-        $this->update_gradebook($username, $mediumid, $percentviewed);
+        $this->update_gradebook($username, $instanceid, $percentviewed);
 
         mtrace('My task ended');
     }
@@ -95,9 +96,9 @@ class get_video_view_stats extends \core\task\adhoc_task {
     /**
      * Update the gradebook with the percentage viewed
      */
-    protected function update_gradebook($username, $mediumid, $percentviewed) {
+    protected function update_gradebook($username, $instanceid, $percentviewed) {
         global $DB;
-        $instance = $DB->get_record('instilledvideo', array('mediumid' => $mediumid), '*', IGNORE_MISSING);
+        $instance = $DB->get_record('instilledvideo', array('id' => $instanceid), '*', IGNORE_MISSING);
         $user = $DB->get_record('user', array('username' => $username), 'id', IGNORE_MISSING);
 
         $grades = array();

@@ -61,13 +61,13 @@ class mod_instilledvideo_renderer extends plugin_renderer_base {
             // Check 5 minutes later.
             $task1 = new \mod_instilledvideo\task\get_video_view_stats();
             $task1->set_next_run_time(time() + 60 * 5);
-            $task1->set_custom_data(array($USER->username, $instilledvideo->mediumid));
+            $task1->set_custom_data(array($USER->username, $instilledvideo->mediumid, $instilledvideo->id));
             \core\task\manager::queue_adhoc_task($task1);
 
             // Check 4 hours later.
             $task2 = new \mod_instilledvideo\task\get_video_view_stats();
             $task2->set_next_run_time(time() + 60 * 60 * 4);
-            $task2->set_custom_data(array($USER->username, $instilledvideo->mediumid));
+            $task2->set_custom_data(array($USER->username, $instilledvideo->mediumid, $instilledvideo->id));
             \core\task\manager::queue_adhoc_task($task2);
         }
 
