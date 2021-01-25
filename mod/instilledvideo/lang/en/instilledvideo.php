@@ -58,3 +58,10 @@ $string['privacy:metadata:custompublishdata'] = 'The custompublishdata of the us
 $string['privacy:metadata:editor'] = 'The editor of the user accessing Instilled';
 $string['privacy:metadata:module'] = 'The module of the user accessing Instilled';
 $string['privacy:metadata:source'] = 'The source of the user accessing Instilled';
+
+$string['instilledvideo:videotimeviewed'] = 'video time viewed';
+$string['instilledvideo:point'] = 'Point';
+$string['instilledvideo:gradehelp1'] = 'If you would like students to be scored on';
+$string['instilledvideo:gradehelp2'] = ', select a grade type of';
+$string['instilledvideo:gradehelp3'] = 'For example, if you select';
+$string['instilledvideo:gradehelp4'] = 'with a maximum grade of 10, a student who watches 80% of the video would receive 8 points.';
