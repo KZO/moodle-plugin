@@ -40,13 +40,15 @@ class get_video_view_stats extends \core\task\adhoc_task {
         $username = $data[0];
         $mediumid = $data[1];
         $instanceid = $data[2];
+        $grademax = $data[3];
 
         $instilled = new \local_instilled_media_gallery\instilled();
         $accesskey = $instilled->authenticate_user(null, $username);
 
         $viewdata = $this->get_video_view_data($accesskey, $username, $mediumid);
         $percentviewed = $this->calculate_percent_viewed($viewdata);
-        $this->update_gradebook($username, $instanceid, $percentviewed);
+        $score = round($percentviewed / $grademax, 1);
+        $this->update_gradebook($username, $instanceid, $score);
 
         mtrace('My task ended');
     }
