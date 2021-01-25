@@ -28,6 +28,8 @@ require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once($CFG->libdir . '/filelib.php');
 require_once($CFG->dirroot . '/local/instilled_media_gallery/locallib.php');
 
+use core_grades\component_gradeitems;
+
 class mod_instilledvideo_mod_form extends moodleform_mod {
 
     public function definition() {
@@ -111,8 +113,7 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
 
         $this->standard_coursemodule_elements();
 
-        // Grade settings taken from scorm activity module.
-        $this->standard_grading_coursemodule_elements();
+        $this->instilledvideo_grading_coursemodule_elements();
 
         $this->add_action_buttons();
     }
@@ -127,5 +128,100 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
         ));
 
         return $link;
+    }
+
+    private function instilledvideo_grading_coursemodule_elements() {
+        global $COURSE, $CFG;
+
+        $this->gradedorrated = 'graded';
+
+        $itemnumber = 0;
+        $gradefieldname = component_gradeitems::get_field_name_for_itemnumber('mod_instilledvideo', $itemnumber, 'grade');
+        $gradecatfieldname = component_gradeitems::get_field_name_for_itemnumber('mod_instilledvideo', $itemnumber, 'gradecat');
+        $gradepassfieldname = component_gradeitems::get_field_name_for_itemnumber('mod_instilledvideo', $itemnumber, 'gradepass');
+
+        $mform =& $this->_form;
+        $isupdate = !empty($this->_cm);
+        $gradeoptions = array('isupdate' => $isupdate,
+                              'currentgrade' => false,
+                              'hasgrades' => false,
+                              'canrescale' => $this->_features->canrescale,
+                              'useratings' => $this->_features->rating);
+
+        if ($this->_features->hasgrades) {
+            if ($this->_features->gradecat) {
+                $mform->addElement('header', 'modstandardgrade', get_string('grade'));
+            }
+
+            //if supports grades and grades arent being handled via ratings
+            if ($isupdate) {
+                $gradeitem = grade_item::fetch(array('itemtype' => 'mod',
+                                                        'itemmodule' => $this->_cm->modname,
+                                                        'iteminstance' => $this->_cm->instance,
+                                                        'itemnumber' => 0,
+                                                        'courseid' => $COURSE->id));
+
+                if ($gradeitem) {
+                    $gradeoptions['currentgrade'] = $gradeitem->grademax;
+                    $gradeoptions['currentgradetype'] = $gradeitem->gradetype;
+                    $gradeoptions['currentscaleid'] = $gradeitem->scaleid;
+                    $gradeoptions['hasgrades'] = $gradeitem->has_grades();
+                }
+            }
+
+            $p1 = get_string('instilledvideo:gradehelp1', 'instilledvideo') . ' <strong>' . get_string('instilledvideo:videotimeviewed', 'instilledvideo') . '</strong>'
+                . get_string('instilledvideo:gradehelp2', 'instilledvideo') . ' <em>' . get_string('instilledvideo:point', 'instilledvideo') . '</em>.';
+            $p2 = get_string('instilledvideo:gradehelp3', 'instilledvideo') . ' <em>' . get_string('instilledvideo:point', 'instilledvideo') . '</em> '
+                . get_string('instilledvideo:gradehelp4', 'instilledvideo');
+
+            $mform->addElement('html', '<p>'.$p1.'</p>');
+            $mform->addElement('html', '<p>'.$p2.'</p>');
+            $mform->addElement('modgrade', $gradefieldname, get_string('grade'), $gradeoptions);
+            $default = isset($gradeitem->gradetype) ? $gradeitem->gradetype : 0;
+            $mform->setDefault($gradefieldname, $default);
+
+            if ($this->_features->advancedgrading
+                    and !empty($this->current->_advancedgradingdata['methods'])
+                    and !empty($this->current->_advancedgradingdata['areas'])) {
+
+                if (count($this->current->_advancedgradingdata['areas']) == 1) {
+                    // if there is just one gradable area (most cases), display just the selector
+                    // without its name to make UI simplier
+                    $areadata = reset($this->current->_advancedgradingdata['areas']);
+                    $areaname = key($this->current->_advancedgradingdata['areas']);
+                    $mform->addElement('select', 'advancedgradingmethod_'.$areaname,
+                        get_string('gradingmethod', 'core_grading'), $this->current->_advancedgradingdata['methods']);
+                    $mform->addHelpButton('advancedgradingmethod_'.$areaname, 'gradingmethod', 'core_grading');
+                    $mform->hideIf('advancedgradingmethod_'.$areaname, "{$gradefieldname}[modgrade_type]", 'eq', 'none');
+
+                } else {
+                    // the module defines multiple gradable areas, display a selector
+                    // for each of them together with a name of the area
+                    $areasgroup = array();
+                    foreach ($this->current->_advancedgradingdata['areas'] as $areaname => $areadata) {
+                        $areasgroup[] = $mform->createElement('select', 'advancedgradingmethod_'.$areaname,
+                            $areadata['title'], $this->current->_advancedgradingdata['methods']);
+                        $areasgroup[] = $mform->createElement('static', 'advancedgradingareaname_'.$areaname, '', $areadata['title']);
+                    }
+                    $mform->addGroup($areasgroup, 'advancedgradingmethodsgroup', get_string('gradingmethods', 'core_grading'),
+                        array(' ', '<br />'), false);
+                }
+            }
+
+            if ($this->_features->gradecat) {
+                $mform->addElement('select', $gradecatfieldname,
+                        get_string('gradecategoryonmodform', 'grades'),
+                        grade_get_categories_menu($COURSE->id, $this->_outcomesused));
+                $mform->addHelpButton($gradecatfieldname, 'gradecategoryonmodform', 'grades');
+                $mform->hideIf($gradecatfieldname, "{$gradefieldname}[modgrade_type]", 'eq', 'none');
+            }
+
+            // Grade to pass.
+            $mform->addElement('text', $gradepassfieldname, get_string($gradepassfieldname, 'grades'));
+            $mform->addHelpButton($gradepassfieldname, $gradepassfieldname, 'grades');
+            $mform->setDefault($gradepassfieldname, '');
+            $mform->setType($gradepassfieldname, PARAM_RAW);
+            $mform->hideIf($gradepassfieldname, "{$gradefieldname}[modgrade_type]", 'eq', 'none');
+        }
     }
 }
