@@ -129,14 +129,30 @@ function instilledvideo_grade_item_update($instilledvideo, $grades=null) {
     }
 
     $params = array('itemname' => $instilledvideo->name);
+
     if (isset($instilledvideo->cmidnumber)) {
         $params['idnumber'] = $instilledvideo->cmidnumber;
     }
 
-    $params['gradetype'] = GRADE_TYPE_VALUE;
-    $params['grademax']  = 100;
-    $params['grademin']  = 0;
+    if (isset($instilledvideo->coursemodule)) {
+        $params['idnumber'] = $instilledvideo->coursemodule;
+    }
 
+    if (isset($instilledvideo->grade)) {
+        if ($instilledvideo->grade === 0) {
+            $params['gradetype'] = GRADE_TYPE_NONE;
+    
+        } else if ($instilledvideo->grade > 0) {
+            $params['gradetype'] = GRADE_TYPE_VALUE;
+            $params['grademax']  = $instilledvideo->grade;
+            $params['grademin']  = 0;
+    
+        } else if ($instilledvideo->grade < 0) {
+            $params['gradetype'] = GRADE_TYPE_SCALE;
+            $params['scaleid']   = -$instilledvideo->grade;
+        }
+    }
+ 
     if ($grades === 'reset') {
         $params['reset'] = true;
         $grades = null;
