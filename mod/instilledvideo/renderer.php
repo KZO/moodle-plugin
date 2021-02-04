@@ -62,7 +62,7 @@ class mod_instilledvideo_renderer extends plugin_renderer_base {
                                                         'courseid' => $COURSE->id));
 
             // If point grading is turned on
-            if ($gradeitem->gradetype == 1) {
+            if (is_object($gradeitem) && $gradeitem->gradetype == 1) {
                 // After a user watches a video, the grade book needs to be updated with the view time.
                 // Schedule multiple tasks in the future to check the video view time.
 
