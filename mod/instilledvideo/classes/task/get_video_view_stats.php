@@ -27,6 +27,7 @@ namespace mod_instilledvideo\task;
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/local/instilled_media_gallery/locallib.php');
+require_once($CFG->dirroot . '/mod/instilledvideo/lib.php');
 
 /**
  * Adhoc task that gets video view stats for a specific user.
@@ -34,7 +35,7 @@ require_once($CFG->dirroot . '/local/instilled_media_gallery/locallib.php');
 class get_video_view_stats extends \core\task\adhoc_task {
 
     public function execute() {
-        mtrace('My task started');
+        mtrace('Instilled Video grading task started');
         $data = $this->get_custom_data();
 
         $username = $data[0];
@@ -47,10 +48,19 @@ class get_video_view_stats extends \core\task\adhoc_task {
 
         $viewdata = $this->get_video_view_data($accesskey, $username, $mediumid);
         $percentviewed = $this->calculate_percent_viewed($viewdata);
-        $score = round($percentviewed / $grademax, 1);
+        $score = round($percentviewed * (100 / $grademax), 1);
+        if ($score > $grademax) {
+            $score = $grademax;
+        }
+        mtrace('Username: ' . $username);
+        mtrace('Medium ID: ' . $mediumid);
+        mtrace('Instance ID: ' . $instanceid);
+        mtrace('Grade Max: ' . $grademax);
+        mtrace('Percent Viewed: ' . $percentviewed);
+        mtrace('Score: ' . $score);
         $this->update_gradebook($username, $instanceid, $score);
 
-        mtrace('My task ended');
+        mtrace('Instilled Video grading task ended');
     }
 
     /**
