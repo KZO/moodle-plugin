@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -24,6 +23,8 @@
 /**
  * Define all the backup steps that will be used by the backup_instilledvideo_activity_task
  */
+
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * Define the complete Instilled Video structure for backup, with file and id annotations
