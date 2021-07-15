@@ -60,7 +60,7 @@ function instilledgallery_add_instance($moduleinstance, $mform = null) {
     global $DB;
     global $COURSE;
 
-    $containerid = create_container();
+    $containerid = create_container($moduleinstance->name);
     $groupid = get_student_group();
 
     // Give students permission to upload.
@@ -202,16 +202,15 @@ function instilledgallery_update_grades($instilledgallery, $userid=0, $nullifnon
 /**
 * Create a container to hold the student video gallery
 */
-function create_container() {
+function create_container($title) {
     $method = 'POST';
 
     $tenanturl = get_config('local_instilled_media_gallery', 'tenanturl');
-    $parentcontainerid = get_config('local_instilled_media_gallery', 'defaultcontainer');
 
-    $url = $tenanturl . '/api/containers/'. $parentcontainerid .'/container';
+    $url = $tenanturl . '/api/containers/root/container';
 
     // Create a container with an arbitrary, unique title
-    $postdata = '{"containers": {"title": "'.time().'"}}';
+    $postdata = '{"containers": {"title": "'.$title.'"}}';
 
     $result = \local_instilled_media_gallery\instilled::call_api($method, $url, $postdata);
     $result = json_decode($result);
