@@ -206,9 +206,8 @@ function create_container($title) {
     $method = 'POST';
 
     $tenanturl = get_config('local_instilled_media_gallery', 'tenanturl');
-    $parentcontainerid = get_config('local_instilled_media_gallery', 'defaultcontainer');
 
-    $url = $tenanturl . '/api/containers/'. $parentcontainerid .'/container';
+    $url = $tenanturl . '/api/containers/root/container';
 
     // Create a container with an arbitrary, unique title
     $postdata = '{"containers": {"title": "'.$title.'"}}';
