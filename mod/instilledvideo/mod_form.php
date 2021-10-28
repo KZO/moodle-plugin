@@ -150,7 +150,7 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
 
         if ($this->_features->hasgrades) {
             if ($this->_features->gradecat) {
-                $mform->addElement('header', 'modstandardgrade', get_string('grade'));
+                $mform->addElement('header', 'modstandardgrade', get_string('gradenoun'));
             }
 
             //if supports grades and grades arent being handled via ratings
@@ -176,7 +176,7 @@ class mod_instilledvideo_mod_form extends moodleform_mod {
 
             $mform->addElement('html', '<p>'.$p1.'</p>');
             $mform->addElement('html', '<p>'.$p2.'</p>');
-            $mform->addElement('modgrade', $gradefieldname, get_string('grade'), $gradeoptions);
+            $mform->addElement('modgrade', $gradefieldname, get_string('gradenoun'), $gradeoptions);
             $default = isset($gradeitem->gradetype) ? $gradeitem->gradetype : 0;
             $mform->setDefault($gradefieldname, $default);
 
