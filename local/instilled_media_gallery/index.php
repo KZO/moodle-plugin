@@ -58,7 +58,7 @@ $attr = array(
     'width' => '100%',
     'allowfullscreen' => 'true',
     'src' => $tenanturl.'/moodle/media-gallery?containerId='.$defaultcontainer.'&username=' . $USER->username .'&accessKey='. $instilledaccesskey,
-    'allow' => 'autoplay *; fullscreen *; encrypted-media *; camera *; microphone *;',
+    'allow' => 'autoplay; fullscreen; encrypted-media; camera; microphone; display-capture;',
     'style' => 'border: 1px solid #d0d0d0;'
 );
 echo html_writer::tag('iframe', '', $attr);
