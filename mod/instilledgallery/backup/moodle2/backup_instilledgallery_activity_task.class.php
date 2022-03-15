@@ -58,11 +58,11 @@ class backup_instilledgallery_activity_task extends backup_activity_task {
 
         // Link to the list of Instilled Video instances
         $search="/(".$base."\/mod\/instilledgallery\/index.php\?id\=)([0-9]+)/";
-        $content= preg_replace($search, '$@instilledgalleryINDEX*$2@$', $content);
+        $content= preg_replace($search, '$@INSTILLEDGALLERYINDEX*$2@$', $content);
 
         // Link to Instilled Video view by moduleid
         $search="/(".$base."\/mod\/instilledgallery\/view.php\?id\=)([0-9]+)/";
-        $content= preg_replace($search, '$@instilledgalleryVIEWBYID*$2@$', $content);
+        $content= preg_replace($search, '$@INSTILLEDGALLERYVIEWBYID*$2@$', $content);
 
         return $content;
     }

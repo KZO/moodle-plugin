@@ -65,8 +65,8 @@ class restore_instilledgallery_activity_task extends restore_activity_task {
     static public function define_decode_rules() {
         $rules = array();
 
-        $rules[] = new restore_decode_rule('instilledgalleryVIEWBYID', '/mod/instilledgallery/view.php?id=$1', 'course_module');
-        $rules[] = new restore_decode_rule('instilledgalleryINDEX', '/mod/instilledgallery/index.php?id=$1', 'course');
+        $rules[] = new restore_decode_rule('INSTILLEDGALLERYVIEWBYID', '/mod/instilledgallery/view.php?id=$1', 'course_module');
+        $rules[] = new restore_decode_rule('INSTILLEDGALLERYINDEX', '/mod/instilledgallery/index.php?id=$1', 'course');
 
         return $rules;
 
