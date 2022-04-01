@@ -60,16 +60,16 @@ function instilledgallery_add_instance($moduleinstance, $mform = null) {
     global $DB;
     global $COURSE;
 
-    $containerid = create_container($moduleinstance->name);
-    $groupid = get_student_group();
+    $containerid = instilledgallery_create_container($moduleinstance->name);
+    $groupid = instilledgallery_get_student_group();
 
     // Give students permission to upload.
-    $roleuploadid = get_student_role('CONTENT_CREATOR_UPLOAD_MEDIA');
-    set_container_permissions($containerid, $groupid, $roleuploadid);
+    $roleuploadid = instilledgallery_get_student_role('CONTENT_CREATOR_UPLOAD_MEDIA');
+    instilledgallery_set_container_permissions($containerid, $groupid, $roleuploadid);
 
     // Give students permission to record.
-    $rolerecordid = get_student_role('CONTENT_CREATOR_RECORD_MEDIA');
-    set_container_permissions($containerid, $groupid, $rolerecordid);
+    $rolerecordid = instilledgallery_get_student_role('CONTENT_CREATOR_RECORD_MEDIA');
+    instilledgallery_set_container_permissions($containerid, $groupid, $rolerecordid);
 
     $cmid = $moduleinstance->coursemodule;
     $moduleinstance->timecreated = time();
@@ -202,7 +202,7 @@ function instilledgallery_update_grades($instilledgallery, $userid=0, $nullifnon
 /**
 * Create a container to hold the student video gallery
 */
-function create_container($title) {
+function instilledgallery_create_container($title) {
     $method = 'POST';
 
     $tenanturl = get_config('local_instilled_media_gallery', 'tenanturl');
@@ -223,7 +223,7 @@ function create_container($title) {
 /**
 * Get student group ID
 */
-function get_student_group() {
+function instilledgallery_get_student_group() {
     $method = 'GET';
 
     $tenanturl = get_config('local_instilled_media_gallery', 'tenanturl');
@@ -241,7 +241,7 @@ function get_student_group() {
 /**
 * Get student role ID
 */
-function get_student_role($rolename) {
+function instilledgallery_get_student_role($rolename) {
     $method = 'GET';
 
     $tenanturl = get_config('local_instilled_media_gallery', 'tenanturl');
@@ -257,7 +257,7 @@ function get_student_role($rolename) {
 /**
 * Set permissions for a student video gallery container
 */
-function set_container_permissions($containerid, $groupid, $roleid) {
+function instilledgallery_set_container_permissions($containerid, $groupid, $roleid) {
     $method = 'POST';
 
     $tenanturl = get_config('local_instilled_media_gallery', 'tenanturl');
